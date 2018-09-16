@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+<body>
+
+ <div id="holder1" class="chatbox-holder">
+  <div class="chatbox">
+    <div class="chatbox-top">
+      <div class="chat-partner-name">
+        <span class="status online"></span>
+        <a target="_blank" href="#">Production Support</a>
+      </div>
+      <div class="chatbox-icons">
+        <a href="javascript:void(0);"><i class="fa fa-minus"></i></a>
+        <a href="javascript:void(0);"><i class="fa fa-close"></i></a>
+      </div>
+    </div>
+
+    <div id="chatbox-holder1" class="chat-messages">
+
+    </div>
+
+    <div  class="chat-input-holder">
+      <textarea placeholder="Type here" id="textInput" class="chat-input"></textarea>
+      <input type="submit" value="Send" class="message-send" />
+    </div>
+  </div>
+
+
+</div>
+
+<script>
+
+
+$(function(){
+  $('.fa-minus').click(function(){    $(this).closest('.chatbox').toggleClass('chatbox-min');
+  });
+  $('.fa-close').click(function(){
+    $(this).closest('.chatbox').hide();
+  });
+      $('.message-send').click(function(){
+	  getBotResponse();
+
+
+  });
+});
+
+
+
+function getBotResponse() {
+var rawText = $("#textInput").val();
+if($("#textInput").val()){
+			var userHtml ='<div class="message-box-holder"><div class="message-box">'+$("#textInput").val()+'</div></div>';
+			$(".chat-messages").append(userHtml).animate({ scrollTop: 20000000 }, "slow");
+			$("#textInput").val("");
+			document.getElementById('holder1').scrollIntoView({block: 'start', behavior: 'smooth'});
+
+            $.get("/get", { msg: rawText }).done(function(data) {
+			var botHtml ='<div class="message-box-holder"><div class="message-sender"> Bot</div><div class="message-box message-partner">'+data+'</div></div>';
+			$(".chat-messages").append(botHtml).animate({ scrollTop: 20000000 }, "slow");
+			document.getElementById('holder1').scrollIntoView({block: 'start', behavior: 'smooth'});
+			});
+
+						}
+}
+
+    $("#textInput").keypress(function(e) {
+            if(e.which == 13) {
+                getBotResponse();
+            }
+        });
+</script>
+
+
+</body>
+</html>
